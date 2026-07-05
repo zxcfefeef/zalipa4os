@@ -1,5 +1,3 @@
--- Roblox Studio: sikweryyhack | Sakura Theme (No Title Bar)
-
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
