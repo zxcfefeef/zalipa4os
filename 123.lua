@@ -1,4 +1,4 @@
--- Roblox Studio: sikweryyhack | Sakura Theme
+-- Roblox Studio: sikweryyhack | Sakura Theme (No Title Bar)
 
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
@@ -29,7 +29,6 @@ local function disconnectAll()
 			connection:Disconnect()
 		end)
 	end
-
 	table.clear(connections)
 end
 
@@ -58,11 +57,7 @@ local movingKeys = {
 local function tween(object, duration, properties, direction)
 	return TweenService:Create(
 		object,
-		TweenInfo.new(
-			duration,
-			Enum.EasingStyle.Quad,
-			direction or Enum.EasingDirection.Out
-		),
+		TweenInfo.new(duration, Enum.EasingStyle.Quad, direction or Enum.EasingDirection.Out),
 		properties
 	)
 end
@@ -81,29 +76,19 @@ local function addStroke(object, color, thickness)
 end
 
 local function autoStop()
-	if not autoStopEnabled or unloaded or not character then
-		return
-	end
+	if not autoStopEnabled or unloaded or not character then return end
 
 	local root = character:FindFirstChild("HumanoidRootPart")
-
 	if root then
-		root.AssemblyLinearVelocity = Vector3.new(
-			0,
-			root.AssemblyLinearVelocity.Y,
-			0
-		)
-
+		root.AssemblyLinearVelocity = Vector3.new(0, root.AssemblyLinearVelocity.Y, 0)
 		root.AssemblyAngularVelocity = Vector3.new(0, 0, 0)
 	end
 end
 
 local function setSpeed(value)
 	local newSpeed = tonumber(value)
-
 	if newSpeed and newSpeed > 0 then
 		speed = newSpeed
-
 		if humanoid then
 			humanoid.WalkSpeed = speed
 		end
@@ -111,10 +96,7 @@ local function setSpeed(value)
 end
 
 local function setupCharacter(char)
-	if unloaded then
-		return
-	end
-
+	if unloaded then return end
 	character = char
 	humanoid = character:WaitForChild("Humanoid")
 	humanoid.WalkSpeed = speed
@@ -124,26 +106,15 @@ local function addButtonAnimation(button, normalColor, hoverColor)
 	local originalSize = button.Size
 
 	addConnection(button.MouseEnter:Connect(function()
-		if unloaded then
-			return
-		end
-
+		if unloaded then return end
 		tween(button, 0.12, {
 			BackgroundColor3 = hoverColor,
-			Size = UDim2.new(
-				originalSize.X.Scale,
-				originalSize.X.Offset + 2,
-				originalSize.Y.Scale,
-				originalSize.Y.Offset + 1
-			),
+			Size = UDim2.new(originalSize.X.Scale, originalSize.X.Offset + 2, originalSize.Y.Scale, originalSize.Y.Offset + 1),
 		}):Play()
 	end))
 
 	addConnection(button.MouseLeave:Connect(function()
-		if unloaded then
-			return
-		end
-
+		if unloaded then return end
 		tween(button, 0.12, {
 			BackgroundColor3 = normalColor,
 			Size = originalSize,
@@ -151,32 +122,19 @@ local function addButtonAnimation(button, normalColor, hoverColor)
 	end))
 
 	addConnection(button.MouseButton1Down:Connect(function()
-		if unloaded then
-			return
-		end
-
+		if unloaded then return end
 		tween(button, 0.08, {
-			Size = UDim2.new(
-				originalSize.X.Scale,
-				originalSize.X.Offset - 2,
-				originalSize.Y.Scale,
-				originalSize.Y.Offset - 1
-			),
+			Size = UDim2.new(originalSize.X.Scale, originalSize.X.Offset - 2, originalSize.Y.Scale, originalSize.Y.Offset - 1),
 		}):Play()
 	end))
 
 	addConnection(button.MouseButton1Up:Connect(function()
-		if unloaded then
-			return
-		end
-
+		if unloaded then return end
 		tween(button, 0.1, {
 			Size = originalSize,
 		}):Play()
 	end))
 end
-
--- GUI
 
 local gui = Instance.new("ScreenGui")
 gui.Name = "sikweryyhack"
@@ -196,47 +154,100 @@ frame.Parent = gui
 addCorner(frame, 18)
 addStroke(frame, COLORS.stroke, 1.5)
 
-local title = Instance.new("TextLabel")
-title.Size = UDim2.new(1, 0, 0, 42)
-title.BackgroundColor3 = COLORS.header
-title.Text = "🌸  sikweryyhack"
-title.TextColor3 = COLORS.text
-title.Font = Enum.Font.GothamBold
-title.TextSize = 18
-title.BorderSizePixel = 0
-title.Parent = frame
-
-addCorner(title, 18)
-
-local titleFix = Instance.new("Frame")
-titleFix.Size = UDim2.new(1, 0, 0, 18)
-titleFix.Position = UDim2.new(0, 0, 1, -18)
-titleFix.BackgroundColor3 = COLORS.header
-titleFix.BorderSizePixel = 0
-titleFix.Parent = title
-
 local hideButton = Instance.new("TextButton")
-hideButton.Size = UDim2.new(0, 30, 0, 28)
-hideButton.Position = UDim2.new(1, -37, 0, 7)
-hideButton.BackgroundColor3 = Color3.fromRGB(255, 218, 231)
-hideButton.TextColor3 = COLORS.text
+hideButton.Size = UDim2.new(0, 24, 0, 24)
+hideButton.AnchorPoint = Vector2.new(1, 0)
+hideButton.Position = UDim2.new(1, -8, 0, 8)
+hideButton.BackgroundColor3 = Color3.fromRGB(255, 120, 170)
+hideButton.TextColor3 = COLORS.white
 hideButton.Text = "—"
 hideButton.Font = Enum.Font.GothamBold
-hideButton.TextSize = 18
+hideButton.TextSize = 16
 hideButton.BorderSizePixel = 0
-hideButton.Parent = title
+hideButton.AutoButtonColor = false
+hideButton.ZIndex = 100
+hideButton.Parent = frame
 
-addCorner(hideButton, 10)
+addCorner(hideButton, 12)
+addStroke(hideButton, Color3.fromRGB(255, 170, 205), 1)
+
+addConnection(hideButton.MouseEnter:Connect(function()
+	if unloaded then return end
+	tween(hideButton, 0.12, {
+		BackgroundColor3 = Color3.fromRGB(255, 90, 150),
+		Size = UDim2.new(0, 26, 0, 26)
+	}):Play()
+end))
+
+addConnection(hideButton.MouseLeave:Connect(function()
+	if unloaded then return end
+	tween(hideButton, 0.12, {
+		BackgroundColor3 = Color3.fromRGB(255, 120, 170),
+		Size = UDim2.new(0, 24, 0, 24)
+	}):Play()
+end))
+
+addConnection(hideButton.MouseButton1Down:Connect(function()
+	if unloaded then return end
+	tween(hideButton, 0.08, {
+		Size = UDim2.new(0, 22, 0, 22)
+	}):Play()
+end))
+
+addConnection(hideButton.MouseButton1Up:Connect(function()
+	if unloaded then return end
+	tween(hideButton, 0.1, {
+		Size = UDim2.new(0, 24, 0, 24)
+	}):Play()
+end))
 
 local content = Instance.new("Frame")
-content.Size = UDim2.new(1, 0, 1, -42)
-content.Position = UDim2.new(0, 0, 0, 42)
+content.Size = UDim2.new(1, 0, 1, 0)
+content.Position = UDim2.new(0, 0, 0, 0)
 content.BackgroundTransparency = 1
+content.ZIndex = 1
 content.Parent = frame
+
+local tabMain = Instance.new("TextButton")
+tabMain.Size = UDim2.new(0, 90, 0, 32)
+tabMain.Position = UDim2.new(0, 12, 0, 10)
+tabMain.BackgroundColor3 = COLORS.enabled
+tabMain.TextColor3 = COLORS.white
+tabMain.Font = Enum.Font.GothamBold
+tabMain.TextSize = 14
+tabMain.Text = "Main"
+tabMain.BorderSizePixel = 0
+tabMain.Parent = content
+addCorner(tabMain, 10)
+
+local tabAbout = Instance.new("TextButton")
+tabAbout.Size = UDim2.new(0, 90, 0, 32)
+tabAbout.Position = UDim2.new(0, 108, 0, 10)
+tabAbout.BackgroundColor3 = COLORS.button
+tabAbout.TextColor3 = COLORS.text
+tabAbout.Font = Enum.Font.GothamBold
+tabAbout.TextSize = 14
+tabAbout.Text = "About"
+tabAbout.BorderSizePixel = 0
+tabAbout.Parent = content
+addCorner(tabAbout, 10)
+
+local mainPage = Instance.new("Frame")
+mainPage.Size = UDim2.new(1, 0, 1, -52)
+mainPage.Position = UDim2.new(0, 0, 0, 52)
+mainPage.BackgroundTransparency = 1
+mainPage.Parent = content
+
+local aboutPage = Instance.new("Frame")
+aboutPage.Size = mainPage.Size
+aboutPage.Position = mainPage.Position
+aboutPage.BackgroundTransparency = 1
+aboutPage.Visible = false
+aboutPage.Parent = content
 
 local speedBox = Instance.new("TextBox")
 speedBox.Size = UDim2.new(0, 135, 0, 36)
-speedBox.Position = UDim2.new(0, 12, 0, 12)
+speedBox.Position = UDim2.new(0, 12, 0, 0)
 speedBox.BackgroundColor3 = COLORS.input
 speedBox.TextColor3 = COLORS.text
 speedBox.PlaceholderColor3 = Color3.fromRGB(180, 110, 140)
@@ -245,53 +256,49 @@ speedBox.TextSize = 16
 speedBox.Text = tostring(speed)
 speedBox.PlaceholderText = "Speed"
 speedBox.BorderSizePixel = 0
-speedBox.Parent = content
-
+speedBox.Parent = mainPage
 addCorner(speedBox, 10)
 addStroke(speedBox, COLORS.stroke, 1)
 
 local applyButton = Instance.new("TextButton")
 applyButton.Size = UDim2.new(0, 80, 0, 36)
-applyButton.Position = UDim2.new(0, 157, 0, 12)
+applyButton.Position = UDim2.new(0, 157, 0, 0)
 applyButton.BackgroundColor3 = COLORS.button
 applyButton.TextColor3 = COLORS.text
 applyButton.Font = Enum.Font.GothamBold
 applyButton.TextSize = 15
 applyButton.Text = "Apply"
 applyButton.BorderSizePixel = 0
-applyButton.Parent = content
-
+applyButton.Parent = mainPage
 addCorner(applyButton, 10)
 
 local noclipButton = Instance.new("TextButton")
 noclipButton.Size = UDim2.new(1, -24, 0, 36)
-noclipButton.Position = UDim2.new(0, 12, 0, 60)
+noclipButton.Position = UDim2.new(0, 12, 0, 48)
 noclipButton.BackgroundColor3 = COLORS.disabled
 noclipButton.TextColor3 = COLORS.text
 noclipButton.Font = Enum.Font.GothamBold
 noclipButton.TextSize = 15
 noclipButton.Text = "Noclip: OFF"
 noclipButton.BorderSizePixel = 0
-noclipButton.Parent = content
-
+noclipButton.Parent = mainPage
 addCorner(noclipButton, 10)
 
 local autoStopButton = Instance.new("TextButton")
 autoStopButton.Size = UDim2.new(1, -24, 0, 36)
-autoStopButton.Position = UDim2.new(0, 12, 0, 108)
+autoStopButton.Position = UDim2.new(0, 12, 0, 96)
 autoStopButton.BackgroundColor3 = COLORS.enabled
 autoStopButton.TextColor3 = COLORS.white
 autoStopButton.Font = Enum.Font.GothamBold
 autoStopButton.TextSize = 15
 autoStopButton.Text = "AutoStop: ON"
 autoStopButton.BorderSizePixel = 0
-autoStopButton.Parent = content
-
+autoStopButton.Parent = mainPage
 addCorner(autoStopButton, 10)
 
 local bindBox = Instance.new("TextBox")
 bindBox.Size = UDim2.new(1, -24, 0, 36)
-bindBox.Position = UDim2.new(0, 12, 0, 156)
+bindBox.Position = UDim2.new(0, 12, 0, 144)
 bindBox.BackgroundColor3 = COLORS.input
 bindBox.TextColor3 = COLORS.text
 bindBox.PlaceholderColor3 = Color3.fromRGB(180, 110, 140)
@@ -300,25 +307,32 @@ bindBox.TextSize = 15
 bindBox.Text = "Bind: F"
 bindBox.PlaceholderText = "Bind key"
 bindBox.BorderSizePixel = 0
-bindBox.Parent = content
-
+bindBox.Parent = mainPage
 addCorner(bindBox, 10)
 addStroke(bindBox, COLORS.stroke, 1)
 
 local unloadButton = Instance.new("TextButton")
 unloadButton.Size = UDim2.new(1, -24, 0, 36)
-unloadButton.Position = UDim2.new(0, 12, 0, 204)
+unloadButton.Position = UDim2.new(0, 12, 0, 192)
 unloadButton.BackgroundColor3 = COLORS.unload
 unloadButton.TextColor3 = COLORS.white
 unloadButton.Font = Enum.Font.GothamBold
 unloadButton.TextSize = 15
 unloadButton.Text = "Unload"
 unloadButton.BorderSizePixel = 0
-unloadButton.Parent = content
-
+unloadButton.Parent = mainPage
 addCorner(unloadButton, 10)
 
--- Свернутая кнопка
+local madeBy = Instance.new("TextLabel")
+madeBy.Size = UDim2.new(1, -24, 0, 80)
+madeBy.Position = UDim2.new(0, 12, 0, 45)
+madeBy.BackgroundTransparency = 1
+madeBy.TextColor3 = COLORS.text
+madeBy.Font = Enum.Font.GothamBold
+madeBy.TextSize = 18
+madeBy.TextWrapped = true
+madeBy.Text = "made by sikweryy and tide"
+madeBy.Parent = aboutPage
 
 local openButton = Instance.new("TextButton")
 openButton.Size = UDim2.new(0, 0, 0, 0)
@@ -331,7 +345,6 @@ openButton.TextSize = 25
 openButton.Visible = false
 openButton.BorderSizePixel = 0
 openButton.Parent = gui
-
 addCorner(openButton, 50)
 addStroke(openButton, COLORS.stroke, 1.5)
 
@@ -341,7 +354,7 @@ addButtonAnimation(autoStopButton, COLORS.enabled, COLORS.buttonHover)
 addButtonAnimation(unloadButton, COLORS.unload, COLORS.unloadHover)
 
 tween(frame, 0.35, {
-	Size = UDim2.new(0, 250, 0, 290),
+	Size = UDim2.new(0, 250, 0, 330),
 	BackgroundTransparency = 0,
 }):Play()
 
@@ -358,10 +371,7 @@ local function updateAutoStopButton()
 end
 
 local function openMenu()
-	if not menuHidden or unloaded then
-		return
-	end
-
+	if not menuHidden or unloaded then return end
 	menuHidden = false
 
 	local shrinkTween = tween(openButton, 0.18, {
@@ -375,7 +385,7 @@ local function openMenu()
 	frame.Visible = true
 
 	tween(frame, 0.3, {
-		Size = UDim2.new(0, 250, 0, 290),
+		Size = UDim2.new(0, 250, 0, 330),
 		BackgroundTransparency = 0,
 	}):Play()
 end
@@ -400,6 +410,24 @@ addConnection(autoStopButton.MouseButton1Click:Connect(function()
 	updateAutoStopButton()
 end))
 
+addConnection(tabMain.MouseButton1Click:Connect(function()
+	mainPage.Visible = true
+	aboutPage.Visible = false
+	tabMain.BackgroundColor3 = COLORS.enabled
+	tabMain.TextColor3 = COLORS.white
+	tabAbout.BackgroundColor3 = COLORS.button
+	tabAbout.TextColor3 = COLORS.text
+end))
+
+addConnection(tabAbout.MouseButton1Click:Connect(function()
+	mainPage.Visible = false
+	aboutPage.Visible = true
+	tabAbout.BackgroundColor3 = COLORS.enabled
+	tabAbout.TextColor3 = COLORS.white
+	tabMain.BackgroundColor3 = COLORS.button
+	tabMain.TextColor3 = COLORS.text
+end))
+
 addConnection(bindBox.FocusLost:Connect(function()
 	local keyName = bindBox.Text:gsub("Bind:", ""):gsub("%s+", ""):upper()
 	local keyCode = Enum.KeyCode[keyName]
@@ -412,13 +440,8 @@ addConnection(bindBox.FocusLost:Connect(function()
 	end
 end))
 
--- Скрытие меню
-
 addConnection(hideButton.MouseButton1Click:Connect(function()
-	if menuHidden or unloaded then
-		return
-	end
-
+	if menuHidden or unloaded then return end
 	menuHidden = true
 
 	local closeTween = tween(frame, 0.25, {
@@ -429,12 +452,11 @@ addConnection(hideButton.MouseButton1Click:Connect(function()
 	closeTween:Play()
 	closeTween.Completed:Wait()
 
-	-- Свернутая кнопка появляется на месте меню
 	openButton.Position = UDim2.new(
 		frame.Position.X.Scale,
 		frame.Position.X.Offset + 100,
 		frame.Position.Y.Scale,
-		frame.Position.Y.Offset + 120
+		frame.Position.Y.Offset + 140
 	)
 
 	frame.Visible = false
@@ -445,14 +467,11 @@ addConnection(hideButton.MouseButton1Click:Connect(function()
 	}):Play()
 end))
 
--- Перетаскивание меню и свернутой кнопки
-
 local dragging = false
 local dragTarget = nil
 local dragStart = nil
 local startPos = nil
 local draggedOpenButton = false
-
 local DRAG_THRESHOLD = 8
 
 local function startDragging(target, input)
@@ -473,33 +492,24 @@ local function stopDragging()
 	startPos = nil
 end
 
-addConnection(title.InputBegan:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseButton1
-		or input.UserInputType == Enum.UserInputType.Touch then
-
+addConnection(frame.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
 		startDragging(frame, input)
 	end
 end))
 
 addConnection(openButton.InputBegan:Connect(function(input)
-	if input.UserInputType == Enum.UserInputType.MouseButton1
-		or input.UserInputType == Enum.UserInputType.Touch then
-
+	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
 		startDragging(openButton, input)
 	end
 end))
 
 addConnection(UserInputService.InputChanged:Connect(function(input)
-	if not dragging or unloaded or not dragTarget or not dragStart or not startPos then
-		return
-	end
+	if not dragging or unloaded or not dragTarget or not dragStart or not startPos then return end
 
-	if input.UserInputType == Enum.UserInputType.MouseMovement
-		or input.UserInputType == Enum.UserInputType.Touch then
-
+	if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
 		local delta = input.Position - dragStart
 
-		-- Если свернутую кнопку реально потащили — запоминаем это
 		if dragTarget == openButton and delta.Magnitude >= DRAG_THRESHOLD then
 			draggedOpenButton = true
 		end
@@ -514,23 +524,17 @@ addConnection(UserInputService.InputChanged:Connect(function(input)
 end))
 
 addConnection(UserInputService.InputEnded:Connect(function(input)
-	if input.UserInputType ~= Enum.UserInputType.MouseButton1
-		and input.UserInputType ~= Enum.UserInputType.Touch then
-		return
-	end
+	if input.UserInputType ~= Enum.UserInputType.MouseButton1 and input.UserInputType ~= Enum.UserInputType.Touch then return end
 
 	local wasDraggingOpenButton = dragTarget == openButton
 	local wasDragged = draggedOpenButton
 
 	stopDragging()
 
-	-- Открываем только если это был обычный клик, без перетаскивания
 	if wasDraggingOpenButton and not wasDragged and menuHidden and not unloaded then
 		openMenu()
 	end
 end))
-
--- Игровые функции
 
 addConnection(UserInputService.JumpRequest:Connect(function()
 	if humanoid and not unloaded then
@@ -539,9 +543,7 @@ addConnection(UserInputService.JumpRequest:Connect(function()
 end))
 
 addConnection(UserInputService.InputBegan:Connect(function(input, gameProcessed)
-	if unloaded or gameProcessed then
-		return
-	end
+	if unloaded or gameProcessed then return end
 
 	if input.KeyCode == autoStopBind then
 		autoStopEnabled = not autoStopEnabled
@@ -554,15 +556,12 @@ addConnection(UserInputService.InputBegan:Connect(function(input, gameProcessed)
 end))
 
 addConnection(UserInputService.InputEnded:Connect(function(input)
-	if unloaded then
-		return
-	end
+	if unloaded then return end
 
 	if movingKeys[input.KeyCode] ~= nil then
 		movingKeys[input.KeyCode] = false
 
 		local isMoving = false
-
 		for _, pressed in pairs(movingKeys) do
 			if pressed then
 				isMoving = true
@@ -577,9 +576,7 @@ addConnection(UserInputService.InputEnded:Connect(function(input)
 end))
 
 addConnection(RunService.Stepped:Connect(function()
-	if unloaded or not character then
-		return
-	end
+	if unloaded or not character then return end
 
 	if humanoid and humanoid.WalkSpeed ~= speed then
 		humanoid.WalkSpeed = speed
@@ -600,12 +597,8 @@ if player.Character then
 	setupCharacter(player.Character)
 end
 
--- Полное выключение
-
 addConnection(unloadButton.MouseButton1Click:Connect(function()
-	if unloaded then
-		return
-	end
+	if unloaded then return end
 
 	unloaded = true
 	noclipEnabled = false
