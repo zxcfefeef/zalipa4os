@@ -269,7 +269,7 @@ content.BackgroundTransparency = 1
 content.ZIndex = 1
 content.Parent = frame
 
--- Кнопки вкладок (Исправлен порядок: Main -> Themes -> About + уменьшена ширина чтоб не было наложения)
+-- Кнопки вкладок
 local tabMain = Instance.new("TextButton")
 tabMain.Size = UDim2.new(0, 64, 0, 32)
 tabMain.Position = UDim2.new(0, 12, 0, 10)
@@ -328,7 +328,7 @@ aboutPage.Parent = content
 
 -- Элементы Main страницы
 local speedBox = Instance.new("TextBox")
-speedBox.Size = UDim2.new(0, 135, 0, 36)
+speedBox.Size = UDim2.new(0, 105, 0, 36)
 speedBox.Position = UDim2.new(0, 12, 0, 0)
 speedBox.BackgroundColor3 = COLORS.input
 speedBox.TextColor3 = COLORS.text
@@ -343,16 +343,28 @@ addCorner(speedBox, 10)
 local speedStroke = addStroke(speedBox, COLORS.stroke, 1)
 
 local applyButton = Instance.new("TextButton")
-applyButton.Size = UDim2.new(0, 80, 0, 36)
-applyButton.Position = UDim2.new(0, 157, 0, 0)
+applyButton.Size = UDim2.new(0, 56, 0, 36)
+applyButton.Position = UDim2.new(0, 124, 0, 0)
 applyButton.BackgroundColor3 = COLORS.button
 applyButton.TextColor3 = COLORS.text
 applyButton.Font = Enum.Font.GothamBold
-applyButton.TextSize = 15
-applyButton.Text = "Apply"
+applyButton.TextSize = 14
+applyButton.Text = "Set"
 applyButton.BorderSizePixel = 0
 applyButton.Parent = mainPage
 addCorner(applyButton, 10)
+
+local defaultButton = Instance.new("TextButton")
+defaultButton.Size = UDim2.new(0, 50, 0, 36)
+defaultButton.Position = UDim2.new(0, 187, 0, 0)
+defaultButton.BackgroundColor3 = COLORS.button
+defaultButton.TextColor3 = COLORS.text
+defaultButton.Font = Enum.Font.GothamBold
+defaultButton.TextSize = 13
+defaultButton.Text = "Def"
+defaultButton.BorderSizePixel = 0
+defaultButton.Parent = mainPage
+addCorner(defaultButton, 10)
 
 local noclipButton = Instance.new("TextButton")
 noclipButton.Size = UDim2.new(1, -24, 0, 36)
@@ -378,8 +390,9 @@ autoStopButton.BorderSizePixel = 0
 autoStopButton.Parent = mainPage
 addCorner(autoStopButton, 10)
 
+-- Уменьшил ширину поля бинда со 100% до 150, чтобы справа поместилась кнопка IY
 local bindBox = Instance.new("TextBox")
-bindBox.Size = UDim2.new(1, -24, 0, 36)
+bindBox.Size = UDim2.new(0, 150, 0, 36)
 bindBox.Position = UDim2.new(0, 12, 0, 144)
 bindBox.BackgroundColor3 = COLORS.input
 bindBox.TextColor3 = COLORS.text
@@ -392,6 +405,19 @@ bindBox.BorderSizePixel = 0
 bindBox.Parent = mainPage
 addCorner(bindBox, 10)
 local bindStroke = addStroke(bindBox, COLORS.stroke, 1)
+
+-- Кнопка Infinite Yield на главной
+local iyButton = Instance.new("TextButton")
+iyButton.Size = UDim2.new(0, 64, 0, 36)
+iyButton.Position = UDim2.new(0, 174, 0, 144)
+iyButton.BackgroundColor3 = COLORS.button
+iyButton.TextColor3 = COLORS.text
+iyButton.Font = Enum.Font.GothamBold
+iyButton.TextSize = 14
+iyButton.Text = "Run IY"
+iyButton.BorderSizePixel = 0
+iyButton.Parent = mainPage
+addCorner(iyButton, 10)
 
 local unloadButton = Instance.new("TextButton")
 unloadButton.Size = UDim2.new(1, -24, 0, 36)
@@ -431,7 +457,7 @@ openButton.Parent = gui
 addCorner(openButton, 50)
 local openStroke = addStroke(openButton, COLORS.stroke, 1.5)
 
--- Функция динамического обновления темы (включая свернутую кнопку)
+-- Функция динамического обновления темы
 local function updateTheme(themeName)
     currentTheme = THEMES[themeName]
     
@@ -450,6 +476,8 @@ local function updateTheme(themeName)
     tween(madeBy, tTime, {TextColor3 = currentTheme.text}):Play()
     
     tween(applyButton, tTime, {BackgroundColor3 = currentTheme.button, TextColor3 = currentTheme.text}):Play()
+    tween(defaultButton, tTime, {BackgroundColor3 = currentTheme.button, TextColor3 = currentTheme.text}):Play()
+    tween(iyButton, tTime, {BackgroundColor3 = currentTheme.button, TextColor3 = currentTheme.text}):Play()
     tween(unloadButton, tTime, {BackgroundColor3 = currentTheme.unload, TextColor3 = currentTheme.white}):Play()
     
     noclipButton.BackgroundColor3 = noclipEnabled and currentTheme.enabled or currentTheme.disabled
@@ -466,13 +494,13 @@ local function updateTheme(themeName)
     tabAbout.BackgroundColor3 = aboutPage.Visible and currentTheme.enabled or currentTheme.button
     tabAbout.TextColor3 = aboutPage.Visible and currentTheme.white or currentTheme.text
     
-    -- ОБНОВЛЕНИЕ СВЕРНУТОЙ МЕНЮШКИ ПОД ТЕМУ
+    -- Обновление свернутой менюшки
     openButton.Text = currentTheme.icon
     tween(openButton, tTime, {BackgroundColor3 = currentTheme.header, TextColor3 = (themeName == "DarkOnyx" or themeName == "CyberNeon") and currentTheme.white or currentTheme.text}):Play()
     tween(openStroke, tTime, {Color = currentTheme.stroke}):Play()
 end
 
--- Создание индивидуально стилизованных кнопок выбора тем
+-- Создание кнопок выбора тем
 local themeConfig = {
     {name = "Sakura", label = "🌸 Sakura", bg = Color3.fromRGB(255, 191, 215), txt = Color3.fromRGB(105, 48, 73)},
     {name = "DarkOnyx", label = "🕶️ Dark Onyx", bg = Color3.fromRGB(55, 55, 65), txt = Color3.fromRGB(230, 230, 235)},
@@ -493,7 +521,6 @@ for i, config in ipairs(themeConfig) do
     tBtn.Parent = themesPage
     addCorner(tBtn, 10)
     
-    -- Кастомная анимация ховера для каждой кнопки темы
     addConnection(tBtn.MouseEnter:Connect(function()
         if unloaded then return end
         tween(tBtn, 0.12, {BackgroundColor3 = config.bg:Lerp(Color3.new(1,1,1), 0.25)}):Play()
@@ -509,8 +536,10 @@ for i, config in ipairs(themeConfig) do
 end
 
 addButtonAnimation(applyButton, "button", "buttonHover")
+addButtonAnimation(defaultButton, "button", "buttonHover")
 addButtonAnimation(noclipButton, "disabled", "button")
 addButtonAnimation(autoStopButton, "enabled", "buttonHover")
+addButtonAnimation(iyButton, "button", "buttonHover")
 addButtonAnimation(unloadButton, "unload", "unloadHover")
 
 tween(frame, 0.35, {
@@ -542,6 +571,15 @@ local function openMenu()
     shrinkTween.Completed:Wait()
 
     openButton.Visible = false
+    
+    -- Фикс перемещения развернутого окна к свернутой кнопке
+    frame.Position = UDim2.new(
+        openButton.Position.X.Scale,
+        openButton.Position.X.Offset - 100,
+        openButton.Position.Y.Scale,
+        openButton.Position.Y.Offset - 140
+    )
+    
     frame.Visible = true
 
     tween(frame, 0.3, {
@@ -581,6 +619,11 @@ addConnection(applyButton.MouseButton1Click:Connect(function()
     setSpeed(speedBox.Text)
 end))
 
+addConnection(defaultButton.MouseButton1Click:Connect(function()
+    setSpeed(16)
+    speedBox.Text = "16"
+end))
+
 addConnection(speedBox.FocusLost:Connect(function(enterPressed)
     if enterPressed then
         setSpeed(speedBox.Text)
@@ -597,7 +640,14 @@ addConnection(autoStopButton.MouseButton1Click:Connect(function()
     updateAutoStopButton()
 end))
 
--- Переключение вкладок
+-- Клик по кнопке запуска Infinite Yield
+addConnection(iyButton.MouseButton1Click:Connect(function()
+    if unloaded then return end
+    pcall(function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
+    end)
+end))
+
 local function switchTab(showPage)
     mainPage.Visible = (showPage == mainPage)
     themesPage.Visible = (showPage == themesPage)
