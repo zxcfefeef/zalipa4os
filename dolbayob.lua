@@ -329,7 +329,7 @@ madeBy.TextColor3 = COLORS.text
 madeBy.Font = Enum.Font.GothamBold
 madeBy.TextSize = 18
 madeBy.TextWrapped = true
-madeBy.Text = "made by sikweryy and tide"
+madeBy.Text = "made by sikweryy and tide\nInsert = open / close menu"
 madeBy.Parent = aboutPage
 
 local openButton = Instance.new("TextButton")
@@ -388,6 +388,33 @@ local function openMenu()
 	}):Play()
 end
 
+local function closeMenu()
+	if menuHidden or unloaded then return end
+	menuHidden = true
+
+	local closeTween = tween(frame, 0.25, {
+		Size = UDim2.new(0, 0, 0, 0),
+		BackgroundTransparency = 1,
+	}, Enum.EasingDirection.In)
+
+	closeTween:Play()
+	closeTween.Completed:Wait()
+
+	openButton.Position = UDim2.new(
+		frame.Position.X.Scale,
+		frame.Position.X.Offset + 100,
+		frame.Position.Y.Scale,
+		frame.Position.Y.Offset + 140
+	)
+
+	frame.Visible = false
+	openButton.Visible = true
+
+	tween(openButton, 0.25, {
+		Size = UDim2.new(0, 50, 0, 50),
+	}):Play()
+end
+
 addConnection(applyButton.MouseButton1Click:Connect(function()
 	setSpeed(speedBox.Text)
 end))
@@ -439,30 +466,7 @@ addConnection(bindBox.FocusLost:Connect(function()
 end))
 
 addConnection(hideButton.MouseButton1Click:Connect(function()
-	if menuHidden or unloaded then return end
-	menuHidden = true
-
-	local closeTween = tween(frame, 0.25, {
-		Size = UDim2.new(0, 0, 0, 0),
-		BackgroundTransparency = 1,
-	}, Enum.EasingDirection.In)
-
-	closeTween:Play()
-	closeTween.Completed:Wait()
-
-	openButton.Position = UDim2.new(
-		frame.Position.X.Scale,
-		frame.Position.X.Offset + 100,
-		frame.Position.Y.Scale,
-		frame.Position.Y.Offset + 140
-	)
-
-	frame.Visible = false
-	openButton.Visible = true
-
-	tween(openButton, 0.25, {
-		Size = UDim2.new(0, 50, 0, 50),
-	}):Play()
+	closeMenu()
 end))
 
 local dragging = false
@@ -542,6 +546,15 @@ end))
 
 addConnection(UserInputService.InputBegan:Connect(function(input, gameProcessed)
 	if unloaded or gameProcessed then return end
+
+	if input.KeyCode == Enum.KeyCode.Insert then
+		if menuHidden then
+			openMenu()
+		else
+			closeMenu()
+		end
+		return
+	end
 
 	if input.KeyCode == autoStopBind then
 		autoStopEnabled = not autoStopEnabled
